@@ -25,8 +25,16 @@ namespace Final_Project_Game
         Texture2D startTexture;
         Rectangle startRect;
 
+        Texture2D exitTexture;
+        Rectangle exitRect;
+
+        Texture2D retryTexture;
+        Rectangle retryRect;
+
         Texture2D rectangleTexture;
         Rectangle rectangleRect;
+        Rectangle rectangle2Rect;
+        Rectangle rectangle3Rect;
 
         Texture2D introTexture;
         Texture2D gameTexture;
@@ -42,14 +50,12 @@ namespace Final_Project_Game
         Rectangle pipe2UpRect;
         Rectangle pipe3UpRect;
         Rectangle pipe4UpRect;
-        Rectangle pipe5UpRect;
 
         Texture2D pipe1DownTexture;
         Rectangle pipe1DownRect;
         Rectangle pipe2DownRect;
         Rectangle pipe3DownRect;
         Rectangle pipe4DownRect;
-        Rectangle pipe5DownRect;
 
         Vector2 pipeSpeed;
 
@@ -77,17 +83,19 @@ namespace Final_Project_Game
 
             startRect = new Rectangle(500, 350, 175, 175);
             rectangleRect = new Rectangle(523, 393, 132, 81);
-            birdRect = new Rectangle(5, 50, 75, 75);
+            birdRect = new Rectangle(5, 60, 75, 75);
             pipe1UpRect = new Rectangle(75, 150, 65, 500);
             pipe1DownRect = new Rectangle(75, -40, 65, 100);
-            pipe2UpRect = new Rectangle(250, 200, 65, 400);
-            pipe2DownRect = new Rectangle(250, 0, 65, 125);
-            pipe3UpRect = new Rectangle(400, 300, 65, 400);
-            pipe3DownRect = new Rectangle(400, 0, 65, 225);
-            pipe4UpRect = new Rectangle(550, 150, 65, 550);
-            pipe4DownRect = new Rectangle(550, 0, 65, 30);
-            //pipe5UpRect = new Rectangle(700, 200, 65, 400);
-            //pipe5DownRect = new Rectangle(700, 0, 65, 125);
+            pipe2UpRect = new Rectangle(300, 250, 65, 400);
+            pipe2DownRect = new Rectangle(300, 0, 65, 125);
+            pipe3UpRect = new Rectangle(500, 350, 65, 400);
+            pipe3DownRect = new Rectangle(500, 0, 65, 225);
+            pipe4UpRect = new Rectangle(700, 400, 65, 550);
+            pipe4DownRect = new Rectangle(700, 0, 65, 300);
+            exitRect = new Rectangle(50, 100, 400, 400);
+            rectangle2Rect = new Rectangle();
+            retryRect = new Rectangle(400, 100, 375, 375);
+            rectangle3Rect = new Rectangle();
 
             pipeSpeed = new Vector2(-1, 0);
 
@@ -111,6 +119,8 @@ namespace Final_Project_Game
             deadTexture = Content.Load<Texture2D>("black");
             pipe1UpTexture = Content.Load<Texture2D>("upPipe");
             pipe1DownTexture = Content.Load<Texture2D>("downPipe");
+            exitTexture = Content.Load<Texture2D>("exit");
+            retryTexture = Content.Load<Texture2D>("tryAgain");
         }
 
         protected override void Update(GameTime gameTime)
@@ -174,16 +184,55 @@ namespace Final_Project_Game
                 if (pipe4DownRect.Right <= 0)
                     pipe4DownRect.X = 800;
 
-                //pipe5UpRect.X += (int)pipeSpeed.X;
-                //if (pipe5UpRect.Right <= 0)
-                //    pipe5UpRect.X = 800;
-                //pipe5DownRect.X += (int)pipeSpeed.X;
-                //if (pipe5DownRect.Right <= 0)
-                //    pipe5DownRect.X = 800;
+                if (birdRect.Intersects(pipe1UpRect))
+                {
+                    screen = Screen.Dead;
+                }
+                if (birdRect.Intersects(pipe1DownRect))
+                {
+                    screen = Screen.Dead;
+                }
 
-                //if (birdRect.Intersects == pipe1upTexture)
-                //    screen == Screen.Dead;
+                if (birdRect.Intersects(pipe2UpRect))
+                {
+                    screen = Screen.Dead;
+                }
+                if (birdRect.Intersects(pipe2DownRect))
+                {
+                    screen = Screen.Dead;
+                }
 
+                if (birdRect.Intersects(pipe3UpRect))
+                {
+                    screen = Screen.Dead;
+                }
+                if (birdRect.Intersects(pipe3DownRect))
+                {
+                    screen = Screen.Dead;
+                }
+
+                if (birdRect.Intersects(pipe4UpRect))
+                {
+                    screen = Screen.Dead;
+                }
+                if (birdRect.Intersects(pipe4DownRect))
+                {
+                    screen = Screen.Dead;
+                }
+
+                if (screen == Screen.Dead)
+                {
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        if (rectangle2Rect.Contains(mouseState.Position))
+                            Exit();
+                    }
+                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        if (rectangle3Rect.Contains(mouseState.Position)) 
+                            screen = Screen.Game;
+                    }
+                }
 
             }
 
@@ -223,12 +272,14 @@ namespace Final_Project_Game
                 _spriteBatch.Draw(pipe1DownTexture, pipe3DownRect, Color.White);
                 _spriteBatch.Draw(pipe1UpTexture, pipe4UpRect, Color.White);
                 _spriteBatch.Draw(pipe1DownTexture, pipe4DownRect, Color.White);
-                //_spriteBatch.Draw(pipe1UpTexture, pipe5UpRect, Color.White);
-                //_spriteBatch.Draw(pipe1DownTexture, pipe5DownRect, Color.White);
             }
             else if (screen == Screen.Dead)
             {
                 _spriteBatch.Draw(deadTexture, new Rectangle(0, 0, 800, 600), Color.White);
+                _spriteBatch.Draw(exitTexture, exitRect, Color.White);
+                _spriteBatch.Draw(rectangleTexture, rectangle2Rect, Color.White);
+                _spriteBatch.Draw(retryTexture, retryRect, Color.White);
+                _spriteBatch.Draw(rectangleTexture, rectangle3Rect, Color.White);
             }
             else if (screen == Screen.EndScreen)
             {
