@@ -85,6 +85,12 @@
 /processorParam:TextureFormat=Color
 /build:Intro1.png
 
+#begin music.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:music.mp3
+
 #begin rectangle.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -139,4 +145,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:upPipe.png
+
+#begin youWin.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:youWin.png
 

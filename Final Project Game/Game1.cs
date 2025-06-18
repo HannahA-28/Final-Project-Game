@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -33,8 +34,9 @@ namespace Final_Project_Game
 
         Texture2D rectangleTexture;
         Rectangle rectangleRect;
-        Rectangle rectangle2Rect;
-        Rectangle rectangle3Rect;
+
+        Rectangle exitClikerRect;
+        Rectangle retryClickerRect;
 
         Texture2D introTexture;
         Texture2D gameTexture;
@@ -66,6 +68,8 @@ namespace Final_Project_Game
 
         SpriteFont titleFont;
 
+        SoundEffect sound;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -82,8 +86,12 @@ namespace Final_Project_Game
             _graphics.ApplyChanges();
 
             startRect = new Rectangle(500, 350, 175, 175);
+            exitRect = new Rectangle(50, 60, 400, 450);
+            retryRect = new Rectangle(375, 100, 375, 375);
             rectangleRect = new Rectangle(523, 393, 132, 81);
-            birdRect = new Rectangle(5, 60, 75, 75);
+            exitClikerRect = new Rectangle(117, 230, 260, 110);
+            retryClickerRect = new Rectangle(426, 230, 270, 115);
+            birdRect = new Rectangle(5, 85, 35, 35);
             pipe1UpRect = new Rectangle(75, 150, 65, 500);
             pipe1DownRect = new Rectangle(75, -40, 65, 100);
             pipe2UpRect = new Rectangle(300, 250, 65, 400);
@@ -92,10 +100,7 @@ namespace Final_Project_Game
             pipe3DownRect = new Rectangle(500, 0, 65, 225);
             pipe4UpRect = new Rectangle(700, 400, 65, 550);
             pipe4DownRect = new Rectangle(700, 0, 65, 300);
-            exitRect = new Rectangle(50, 100, 400, 400);
-            rectangle2Rect = new Rectangle();
-            retryRect = new Rectangle(400, 100, 375, 375);
-            rectangle3Rect = new Rectangle();
+            
 
             pipeSpeed = new Vector2(-1, 0);
 
@@ -111,6 +116,8 @@ namespace Final_Project_Game
             // TODO: use this.Content to load your game content here
 
             introTexture = Content.Load<Texture2D>("Intro1");
+            exitTexture = Content.Load<Texture2D>("exit");
+            retryTexture = Content.Load<Texture2D>("tryAgain");
             rectangleTexture = Content.Load<Texture2D>("rectangle");
             gameTexture = Content.Load<Texture2D>("Game");
             startTexture = Content.Load<Texture2D>("Start");
@@ -119,8 +126,8 @@ namespace Final_Project_Game
             deadTexture = Content.Load<Texture2D>("black");
             pipe1UpTexture = Content.Load<Texture2D>("upPipe");
             pipe1DownTexture = Content.Load<Texture2D>("downPipe");
-            exitTexture = Content.Load<Texture2D>("exit");
-            retryTexture = Content.Load<Texture2D>("tryAgain");
+            endScreenTexture = Content.Load<Texture2D>("youWin");
+            sound = Content.Load<SoundEffect>("music");
         }
 
         protected override void Update(GameTime gameTime)
@@ -140,7 +147,10 @@ namespace Final_Project_Game
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
                     if (rectangleRect.Contains(mouseState.Position))
+                    {
                         screen = Screen.Game;
+                        sound.Play();
+                    }
                 }
             }
             else if (screen == Screen.Game)
@@ -220,22 +230,38 @@ namespace Final_Project_Game
                     screen = Screen.Dead;
                 }
 
-                if (screen == Screen.Dead)
+            }
+            else if (screen == Screen.Dead)
+            {
+                if (mouseState.LeftButton == ButtonState.Pressed)
                 {
-                    if (mouseState.LeftButton == ButtonState.Pressed)
+                    if (exitClikerRect.Contains(mouseState.Position))
+                        Exit();
+                }
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (retryClickerRect.Contains(mouseState.Position))
                     {
-                        if (rectangle2Rect.Contains(mouseState.Position))
-                            Exit();
-                    }
-                    if (mouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        if (rectangle3Rect.Contains(mouseState.Position)) 
-                            screen = Screen.Game;
+                        startRect = new Rectangle(500, 350, 175, 175);
+                        rectangleRect = new Rectangle(523, 393, 132, 81);
+                        birdRect = new Rectangle(5, 60, 35, 35);
+                        pipe1UpRect = new Rectangle(75, 150, 65, 500);
+                        pipe1DownRect = new Rectangle(75, -40, 65, 100);
+                        pipe2UpRect = new Rectangle(300, 250, 65, 400);
+                        pipe2DownRect = new Rectangle(300, 0, 65, 125);
+                        pipe3UpRect = new Rectangle(500, 350, 65, 400);
+                        pipe3DownRect = new Rectangle(500, 0, 65, 225);
+                        pipe4UpRect = new Rectangle(700, 400, 65, 550);
+                        pipe4DownRect = new Rectangle(700, 0, 65, 300);
+                        exitRect = new Rectangle(50, 60, 400, 450);
+                        exitClikerRect = new Rectangle(117, 230, 250, 110);
+                        retryRect = new Rectangle(375, 100, 375, 375);
+                        retryClickerRect = new Rectangle(426, 230, 250, 110);
+                        screen = Screen.Game;
                     }
                 }
-
+                //if (birdRect.)
             }
-
             base.Update(gameTime);
         }
 
@@ -275,15 +301,15 @@ namespace Final_Project_Game
             }
             else if (screen == Screen.Dead)
             {
+                _spriteBatch.Draw(rectangleTexture, exitClikerRect, Color.White);
+                _spriteBatch.Draw(rectangleTexture, retryClickerRect, Color.White);
                 _spriteBatch.Draw(deadTexture, new Rectangle(0, 0, 800, 600), Color.White);
                 _spriteBatch.Draw(exitTexture, exitRect, Color.White);
-                _spriteBatch.Draw(rectangleTexture, rectangle2Rect, Color.White);
                 _spriteBatch.Draw(retryTexture, retryRect, Color.White);
-                _spriteBatch.Draw(rectangleTexture, rectangle3Rect, Color.White);
             }
             else if (screen == Screen.EndScreen)
             {
-
+                //_spriteBatch.Draw(endScreenTexture, new Rectangle(0, 0, 800, 600), Color.White);
             }
 
                 _spriteBatch.End();
