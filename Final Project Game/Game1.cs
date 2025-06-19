@@ -36,6 +36,7 @@ namespace Final_Project_Game
         Rectangle rectangleRect;
 
         Rectangle exitClikerRect;
+
         Rectangle retryClickerRect;
 
         Texture2D introTexture;
@@ -61,14 +62,15 @@ namespace Final_Project_Game
 
         Vector2 pipeSpeed;
 
+        int pipeCounter;
+
         MouseState mouseState;
-        MouseState prevMouseState;
 
         KeyboardState keyboardState;
 
         SpriteFont titleFont;
 
-        SoundEffect sound;
+        SoundEffect backgroundMusic;
 
         public Game1()
         {
@@ -100,7 +102,7 @@ namespace Final_Project_Game
             pipe3DownRect = new Rectangle(500, 0, 65, 225);
             pipe4UpRect = new Rectangle(700, 400, 65, 550);
             pipe4DownRect = new Rectangle(700, 0, 65, 300);
-            
+            pipeCounter = 0;
 
             pipeSpeed = new Vector2(-1, 0);
 
@@ -127,7 +129,7 @@ namespace Final_Project_Game
             pipe1UpTexture = Content.Load<Texture2D>("upPipe");
             pipe1DownTexture = Content.Load<Texture2D>("downPipe");
             endScreenTexture = Content.Load<Texture2D>("youWin");
-            sound = Content.Load<SoundEffect>("music");
+            backgroundMusic = Content.Load<SoundEffect>("music");
         }
 
         protected override void Update(GameTime gameTime)
@@ -149,7 +151,7 @@ namespace Final_Project_Game
                     if (rectangleRect.Contains(mouseState.Position))
                     {
                         screen = Screen.Game;
-                        sound.Play();
+                        backgroundMusic.Play();
                     }
                 }
             }
@@ -168,31 +170,39 @@ namespace Final_Project_Game
 
                 pipe1UpRect.X += (int)pipeSpeed.X;
                 if (pipe1UpRect.Right <= 0)
+                {
                     pipe1UpRect.X = 800;
-                pipe1DownRect.X += (int)pipeSpeed.X;
-                if (pipe1DownRect.Right <= 0)
                     pipe1DownRect.X = 800;
+                    pipeCounter += 1;
+                }
+                pipe1DownRect.X += (int)pipeSpeed.X;
 
                 pipe2UpRect.X += (int)pipeSpeed.X;
                 if (pipe2UpRect.Right <= 0)
+                {
                     pipe2UpRect.X = 800;
-                pipe2DownRect.X += (int)pipeSpeed.X;
-                if (pipe2DownRect.Right <= 0)
                     pipe2DownRect.X = 800;
+                    pipeCounter += 1;
+                }
+                pipe2DownRect.X += (int)pipeSpeed.X;
 
                 pipe3UpRect.X += (int)pipeSpeed.X;
                 if (pipe3UpRect.Right <= 0)
+                {
                     pipe3UpRect.X = 800;
-                pipe3DownRect.X += (int)pipeSpeed.X;
-                if (pipe3DownRect.Right <= 0)
                     pipe3DownRect.X = 800;
+                    pipeCounter += 1;
+                }
+                pipe3DownRect.X += (int)pipeSpeed.X;
 
                 pipe4UpRect.X += (int)pipeSpeed.X;
                 if (pipe4UpRect.Right <= 0)
+                {
                     pipe4UpRect.X = 800;
-                pipe4DownRect.X += (int)pipeSpeed.X;
-                if (pipe4DownRect.Right <= 0)
                     pipe4DownRect.X = 800;
+                    pipeCounter += 1;
+                }
+                pipe4DownRect.X += (int)pipeSpeed.X;
 
                 if (birdRect.Intersects(pipe1UpRect))
                 {
@@ -229,7 +239,10 @@ namespace Final_Project_Game
                 {
                     screen = Screen.Dead;
                 }
-
+                if (pipeCounter == 20)
+                {
+                    screen = Screen.EndScreen;
+                }
             }
             else if (screen == Screen.Dead)
             {
@@ -260,8 +273,8 @@ namespace Final_Project_Game
                         screen = Screen.Game;
                     }
                 }
-                //if (birdRect.)
             }
+
             base.Update(gameTime);
         }
 
@@ -281,10 +294,10 @@ namespace Final_Project_Game
                 _spriteBatch.DrawString(titleFont, "Instructions:", new Vector2(75, 350), Color.Black);
                 _spriteBatch.DrawString(titleFont, "You will use the up and down arrows", new Vector2(25, 375), Color.Black);
                 _spriteBatch.DrawString(titleFont, "to navigate through the pipes trying", new Vector2(25, 400), Color.Black);
-                _spriteBatch.DrawString(titleFont, "not to hit any, and trying to get all", new Vector2(25, 425), Color.Black);
-                _spriteBatch.DrawString(titleFont, "the coins. You can quit or retry anytime", new Vector2(25, 450), Color.Black);
-                _spriteBatch.DrawString(titleFont, "you hit a pipe. The goal is to make it", new Vector2(25, 475), Color.Black);
-                _spriteBatch.DrawString(titleFont, "to the end. Good Luck!", new Vector2(25, 500), Color.Black);
+                _spriteBatch.DrawString(titleFont, "not to hit any. You can quit or retry", new Vector2(25, 425), Color.Black);
+                _spriteBatch.DrawString(titleFont, "anytime you hit a pipe. Good Luck!", new Vector2(25, 450), Color.Black);
+                _spriteBatch.DrawString(titleFont, "The goal is to make it to the end.", new Vector2(25, 475), Color.Black);
+                _spriteBatch.DrawString(titleFont, "To make it to the end, pass 20 pipes.", new Vector2(25, 500), Color.Black);
                 _spriteBatch.DrawString(titleFont, "CLICK START", new Vector2(25, 525), Color.Black);
             }
             else if (screen == Screen.Game)
@@ -309,9 +322,8 @@ namespace Final_Project_Game
             }
             else if (screen == Screen.EndScreen)
             {
-                //_spriteBatch.Draw(endScreenTexture, new Rectangle(0, 0, 800, 600), Color.White);
+                _spriteBatch.Draw(endScreenTexture, new Rectangle(0, 0, 800, 600), Color.White);
             }
-
                 _spriteBatch.End();
 
             base.Draw(gameTime);
